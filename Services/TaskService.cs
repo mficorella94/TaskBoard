@@ -32,12 +32,14 @@ public class TaskService
     /// </summary>
     public TaskItem? Add(string? title)
     {
+        if (string.IsNullOrWhiteSpace(title)) return null;
+
         lock (_lock)
         {
             var task = new TaskItem
             {
                 Id = _nextId++,
-                Title = title?.Trim() ?? string.Empty
+                Title = title.Trim()
             };
             _tasks.Add(task);
             return task;

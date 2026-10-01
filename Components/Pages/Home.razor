@@ -24,7 +24,7 @@
            @bind="newTitle"
            @bind:event="oninput"
            @onkeydown="OnKeyDown" />
-    <button class="btn-add" @onclick="AddTask">Aggiungi</button>
+    <button class="btn-add" disabled="@(!CanAdd)" @onclick="AddTask">Aggiungi</button>
 </section>
 
 <nav class="filters" aria-label="Filtra le attività">
@@ -67,6 +67,8 @@ else
 
     private int Remaining => tasks.Count(t => !t.IsDone);
 
+    private bool CanAdd => !string.IsNullOrWhiteSpace(newTitle);
+
     private IEnumerable<TaskItem> Visible => filter switch
     {
         Filter.DaFare => tasks.Where(t => !t.IsDone),
@@ -93,6 +95,8 @@ else
 
     private void AddTask()
     {
+        if (!CanAdd) return;
+
         var created = TaskService.Add(newTitle);
         if (created is null) return;
 
